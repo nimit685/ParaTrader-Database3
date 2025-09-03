@@ -13,9 +13,10 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        /* General Styling */
         body {
             font-family: 'Kanit', sans-serif;
-            background-color: #f0f4f8;
+            background-color: #f3f4f6; /* Light gray background */
             position: relative;
             min-height: 100vh;
         }
@@ -23,55 +24,133 @@
             content: '';
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/rubber-tree-plantation.jpg');
+            background-image: url('https://images.unsplash.com/photo-1620173834393-8971405b0a94?q=80&w=2574&auto=format&fit=crop');
             background-size: cover; background-position: center;
-            filter: blur(5px); z-index: -1; opacity: 0.8;
+            filter: blur(8px);
+            z-index: -1;
+            opacity: 0.6;
         }
+        /* Card Styling */
         .form-card {
-            background-color: rgba(255, 255, 255, 0.97);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px; /* More rounded corners */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem; /* More padding */
             margin-top: 2rem;
-            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .form-title {
-            font-size: 1.875rem; font-weight: 700; color: #1a5d1a;
-            text-align: center; margin-bottom: 1.5rem;
+            font-size: 2.25rem; /* Larger title */
+            font-weight: 700;
+            color: #166534; /* Deeper green */
+            text-align: center;
+            margin-bottom: 1rem;
         }
+        .form-subtitle {
+            text-align: center;
+            color: #4b5563;
+            margin-bottom: 2.5rem;
+        }
+        /* Form Elements */
         .form-label {
-            font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: block;
+            font-weight: 500; /* Medium weight */
+            color: #374151;
+            margin-bottom: 0.5rem;
+            display: block;
         }
-        .form-input, .form-select {
-            width: 100%; padding: 0.75rem; border: 1px solid #d1d5db;
-            border-radius: 8px; transition: border-color 0.2s;
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            transition: all 0.2s ease-in-out;
+            background-color: #f9fafb;
         }
-        .form-input:focus, .form-select:focus {
-            outline: none; border-color: #34d399;
-            box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.5);
+        .form-input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            background-color: #ffffff;
         }
+        /* Button Styling */
         .btn {
-            padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600;
-            cursor: pointer; transition: all 0.3s ease;
-            width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            border: none;
         }
-        .btn-primary { background-color: #22c55e; color: white; }
-        .btn-primary:hover { background-color: #16a34a; }
-        .btn-secondary { background-color: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
-        .btn-secondary:hover { background-color: #e5e7eb; }
-        .hidden { display: none; }
-        .tag-container { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 8px; margin-top: 0.5rem; min-height: 46px; }
-        .tag { background-color: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; display: flex; align-items: center; font-size: 0.875rem; }
-        .tag-close { margin-left: 0.5rem; cursor: pointer; font-weight: bold; }
+        .btn-primary {
+            background-color: #16a34a; /* Stronger green */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #15803d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        .btn-secondary:hover {
+            background-color: #f9fafb;
+        }
+        /* Role Cards */
         .role-card {
             transition: all 0.3s ease;
             cursor: pointer;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
         }
         .role-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border-color: #10b981;
         }
+        /* Other Utilities */
+        .hidden { display: none; }
+        .tag-container { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 8px; margin-top: 0.5rem; min-height: 50px; background-color: #f9fafb;}
+        .tag { background-color: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; display: flex; align-items: center; font-size: 0.875rem; }
+        .tag-close { margin-left: 0.5rem; cursor: pointer; font-weight: bold; opacity: 0.7; transition: opacity 0.2s; }
+        .tag-close:hover { opacity: 1; }
+        /* Custom File Input */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        .file-input-button {
+             background-color: #ffffff; color: #374151; border: 1px solid #d1d5db;
+             padding: 0.75rem 1rem; border-radius: 8px; cursor: pointer;
+             display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+             width: 100%;
+        }
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0; top: 0;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+        }
+        .file-name-display {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+
     </style>
 </head>
 <body>
@@ -80,62 +159,62 @@
         
         <div id="role-section" class="form-card text-center">
             <h1 class="form-title">ระบบซื้อ-ขาย ไม้ยางพารา (ทั่วประเทศ)</h1>
-            <p class="text-gray-600 mb-8">ประมวลผลด้วยระบบ AI<br>เพื่อค้นหาคู่ค้าที่เหมาะกับผู้ใช้งานมากที่สุด</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="role-card p-6 border rounded-lg bg-white" onclick="showForm('buyer')">
-                    <i class="fas fa-shopping-cart fa-3x text-green-500 mb-4"></i>
+            <p class="form-subtitle">ประมวลผลด้วยระบบ AI เพื่อค้นหาคู่ค้าที่เหมาะกับคุณที่สุด</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="role-card p-8 bg-white" onclick="showForm('buyer')">
+                    <i class="fas fa-shopping-cart fa-3x text-green-600 mb-5"></i>
                     <h2 class="text-xl font-bold text-gray-800">ผู้รับซื้อ</h2>
-                    <p class="text-gray-500 mt-2">รับซื้อไม้ยางพารา</p>
+                    <p class="text-gray-500 mt-2 text-sm">ลงประกาศรับซื้อไม้ยางพารา</p>
                 </div>
-                <div class="role-card p-6 border rounded-lg bg-white" onclick="showForm('seller')">
-                    <i class="fas fa-tree fa-3x text-green-500 mb-4"></i>
+                <div class="role-card p-8 bg-white" onclick="showForm('seller')">
+                    <i class="fas fa-tree fa-3x text-green-600 mb-5"></i>
                     <h2 class="text-xl font-bold text-gray-800">ผู้ขาย</h2>
-                    <p class="text-gray-500 mt-2">ขายไม้ยางพารา (เจ้าของสวน)</p>
+                    <p class="text-gray-500 mt-2 text-sm">ขายไม้ยางพารา (เจ้าของสวน)</p>
                 </div>
-                 <div class="role-card p-6 border rounded-lg bg-white" onclick="showForm('broker')">
-                    <i class="fas fa-user-tie fa-3x text-green-500 mb-4"></i>
+                 <div class="role-card p-8 bg-white" onclick="showForm('broker')">
+                    <i class="fas fa-user-tie fa-3x text-green-600 mb-5"></i>
                     <h2 class="text-xl font-bold text-gray-800">นายหน้า</h2>
-                    <p class="text-gray-500 mt-2">ขายไม้ยางพารา (ตัวแทนเจ้าของ)</p>
+                    <p class="text-gray-500 mt-2 text-sm">ขายไม้ยางพารา (ตัวแทน)</p>
                 </div>
             </div>
-             <div class="mt-12 border-t pt-6">
-                 <button class="btn btn-secondary max-w-xs mx-auto" onclick="promptForAdminPassword()">
-                     <i class="fas fa-users"></i>ระบบจับคู่ (สำหรับผู้ดูแล)
+             <div class="mt-16 border-t pt-8">
+                 <button class="btn btn-secondary max-w-sm mx-auto" onclick="promptForAdminPassword()">
+                     <i class="fas fa-user-shield"></i>ระบบจับคู่ (สำหรับผู้ดูแล)
                 </button>
             </div>
         </div>
 
         <div id="form-section" class="hidden">
-             <form class="form-card" onsubmit="handleFormSubmit(event)">
+             <form class="form-card max-w-3xl mx-auto" onsubmit="handleFormSubmit(event)">
                 <input type="hidden" id="form-role-hidden">
                 <h2 id="form-section-title" class="form-title"></h2>
                 <div id="form-section-content" class="space-y-6"></div>
-                <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div class="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg">
                     <label class="flex items-center">
-                        <input type="checkbox" id="terms" required class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
-                        <span class="ml-2 text-yellow-800">ข้าพเจ้ายอมรับเงื่อนไขค่าธรรมเนียมการใช้ระบบ 1.5% ของยอดซื้อ-ขายที่สำเร็จ</span>
+                        <input type="checkbox" id="terms" required class="h-5 w-5 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                        <span class="ml-3 text-sm text-green-800">ข้าพเจ้ายอมรับเงื่อนไขค่าธรรมเนียมการใช้ระบบ 1.5% ของยอดซื้อ-ขายที่สำเร็จ</span>
                     </label>
                 </div>
-                <div class="flex gap-4 mt-8">
-                    <button type="button" class="btn btn-secondary" onclick="showSection('role-section')">ย้อนกลับ</button>
-                    <button type="submit" class="btn btn-primary">ส่งข้อมูล</button>
+                <div class="flex flex-col-reverse sm:flex-row gap-4 mt-8">
+                    <button type="button" class="btn btn-secondary" onclick="showSection('role-section')"><i class="fas fa-arrow-left"></i>ย้อนกลับ</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i>ส่งข้อมูล</button>
                 </div>
             </form>
         </div>
 
-        <div id="matching-section" class="hidden form-card">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="form-title mb-0">ระบบจับคู่ข้อมูล</h2>
-                <button class="btn btn-secondary w-auto" onclick="showSection('role-section')">ย้อนกลับ</button>
+        <div id="matching-section" class="hidden form-card max-w-7xl mx-auto">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-8 gap-4">
+                <h2 class="form-title mb-0 text-left">ระบบจับคู่ (สำหรับผู้ดูแล)</h2>
+                <button class="btn btn-secondary w-full sm:w-auto" onclick="showSection('role-section')"><i class="fas fa-arrow-left"></i>ย้อนกลับหน้าหลัก</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-lg font-bold text-center mb-4 text-blue-600">ผู้รับซื้อ</h3>
-                    <div id="buyer-list" class="space-y-4"></div>
+                    <h3 class="text-xl font-bold text-center mb-4 text-blue-700">รายการผู้รับซื้อ</h3>
+                    <div id="buyer-list" class="space-y-4 bg-blue-50 p-4 rounded-lg"></div>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-center mb-4 text-green-600">ผู้ขาย / นายหน้า</h3>
-                    <div id="seller-list" class="space-y-4"></div>
+                    <h3 class="text-xl font-bold text-center mb-4 text-green-700">รายการผู้ขาย / นายหน้า</h3>
+                    <div id="seller-list" class="space-y-4 bg-green-50 p-4 rounded-lg"></div>
                 </div>
             </div>
         </div>
@@ -153,9 +232,7 @@
         
         function showSection(sectionId) {
             Object.values(sections).forEach(s => s.classList.add('hidden'));
-            if (sections[sectionId]) {
-                sections[sectionId].classList.remove('hidden');
-            }
+            if (sections[sectionId]) sections[sectionId].classList.remove('hidden');
             window.scrollTo(0,0);
         }
         
@@ -166,16 +243,11 @@
 
         function promptForAdminPassword() {
             const password = prompt("กรุณาใส่รหัสผ่านสำหรับผู้ดูแล:", "");
-            if (password === "admin1234") {
-                showMatchingSystem();
-            } else if (password !== null) {
-                alert("รหัสผ่านไม่ถูกต้อง");
-            }
+            if (password === "admin1234") showMatchingSystem();
+            else if (password !== null) alert("รหัสผ่านไม่ถูกต้อง");
         }
         
         async function showMatchingSystem() {
-            // In a real app with a backend, you'd fetch data here.
-            // For now, we just use the data submitted in the current session.
             renderMatchingLists();
             showSection('matching-section');
         }
@@ -197,8 +269,14 @@
                 fileUploadHtml = `
                     <div>
                         <label class="form-label">แนบรูปภาพ/วีดีโอ (3-5 ไฟล์)</label>
-                        <input type="file" id="files" class="form-input" multiple accept="image/*,video/*">
-                        <p class="text-xs text-gray-500 mt-1">เพื่อให้ผู้ซื้อตัดสินใจได้ง่ายขึ้น</p>
+                        <div class="file-input-wrapper">
+                            <div class="file-input-button">
+                                <i class="fas fa-upload"></i>
+                                <span>เลือกไฟล์</span>
+                            </div>
+                            <input type="file" id="files" multiple accept="image/*,video/*" onchange="updateFileName(this)">
+                        </div>
+                        <div id="file-name-display" class="file-name-display"></div>
                     </div>
                 `;
             }
@@ -226,13 +304,23 @@
                 </div>
                 ${fileUploadHtml}
                 <div>
-                     <label class="form-label">ID Line</label>
+                     <label class="form-label">ID Line (ถ้ามี)</label>
                      <input type="text" id="lineId" class="form-input">
                 </div>
             `;
             locations = [];
             renderLocationTags();
             setupLocationInput();
+        }
+        
+        function updateFileName(input) {
+            const display = document.getElementById('file-name-display');
+            if (input.files.length > 0) {
+                const fileNames = Array.from(input.files).map(f => f.name).join(', ');
+                display.textContent = `ไฟล์ที่เลือก: ${fileNames}`;
+            } else {
+                display.textContent = '';
+            }
         }
 
         async function handleFormSubmit(event) {
@@ -245,9 +333,7 @@
             const fileInput = form.querySelector('#files');
             let fileNames = [];
             if (fileInput && fileInput.files.length > 0) {
-                for(let i = 0; i < fileInput.files.length; i++) {
-                    fileNames.push(fileInput.files[i].name);
-                }
+                for(let i = 0; i < fileInput.files.length; i++) fileNames.push(fileInput.files[i].name);
             }
 
             const submission = {
@@ -263,29 +349,26 @@
                 files: fileNames,
             };
             
-            const WEB_APP_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+            const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxjpLdRooeozbThqIp4wAsEPpMI39u06gI3a49PEbe4LWkGatz_7Mfk4Hkqb3BNYDB1/exec';
 
             try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json', },
+                await fetch(WEB_APP_URL, {
+                    method: 'POST', mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(submission)
                 });
-                
                 allSubmissions.push(submission);
                 alert('กรอกข้อมูลเสร็จสิ้น ขอบคุณครับ/ค่ะ');
                 form.reset();
                 locations = [];
                 renderLocationTags();
                 showSection('role-section');
-
             } catch (error) {
                 console.error('Error submitting form:', error);
                 alert('เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง');
             } finally {
                 submitButton.disabled = false;
-                submitButton.innerHTML = 'ส่งข้อมูล';
+                submitButton.innerHTML = '<i class="fas fa-paper-plane"></i> ส่งข้อมูล';
             }
         }
         
@@ -298,15 +381,10 @@
                 const locationMatch = currentItem.locations.some(loc => partner.locations.includes(loc));
                 const ageMatch = Math.abs(parseInt(currentItem.age) - parseInt(partner.age)) <= 5;
                 let areaMatch = false;
-                if (currentItem.role === 'buyer') {
-                    areaMatch = parseFloat(partner.area) >= parseFloat(currentItem.area);
-                } else {
-                    areaMatch = parseFloat(partner.area) <= parseFloat(currentItem.area);
-                }
+                if (currentItem.role === 'buyer') areaMatch = parseFloat(partner.area) >= parseFloat(currentItem.area);
+                else areaMatch = parseFloat(partner.area) <= parseFloat(currentItem.area);
 
-                if(locationMatch && ageMatch && areaMatch) {
-                    matches.push(partner);
-                }
+                if(locationMatch && ageMatch && areaMatch) matches.push(partner);
             });
             return matches;
         }
@@ -319,45 +397,48 @@
 
             const renderCard = (item) => {
                 const matches = findPotentialMatches(item, allSubmissions);
-                let matchesHtml = '<p class="text-xs text-gray-500">ไม่มีคู่ค้าที่แนะนำ</p>';
+                let matchesHtml = '<p class="text-xs text-gray-500 italic mt-2">ไม่มีคู่ค้าที่แนะนำ</p>';
                 if (matches.length > 0) {
                     matchesHtml = matches.map(match => `
-                        <div class="text-xs p-1 bg-green-50 rounded mt-1">
-                           <i class="fas fa-check-circle text-green-500"></i> ${match.name} (${match.area} ไร่, ${match.age} ปี)
+                        <div class="text-xs p-2 bg-white rounded-md mt-2 flex items-center gap-2">
+                           <i class="fas fa-check-circle text-green-500"></i>
+                           <span>${match.name} (${match.area} ไร่, ${match.age} ปี)</span>
                         </div>
                     `).join('');
                 }
 
                 let fileInfoHtml = '';
                 if ((item.role === 'seller' || item.role === 'broker') && item.files && item.files.length > 0) {
-                    fileInfoHtml = `<p class="text-sm"><strong>ไฟล์แนบ:</strong> <i class="fas fa-paperclip"></i> ${item.files.length} ไฟล์</p>`;
+                    fileInfoHtml = `<div class="text-sm text-gray-600 mt-2 flex items-center gap-2"><i class="fas fa-paperclip"></i><span>${item.files.length} ไฟล์แนบ</span></div>`;
                 }
 
                 return `
-                    <div class="p-4 border rounded-lg bg-white shadow-sm">
-                        <p class="font-bold">${item.name} <span class="text-gray-500 font-normal">(${item.role})</span></p>
-                        <p class="text-sm"><strong>ติดต่อ:</strong> ${item.phone} / ${item.lineId || 'N/A'}</p>
-                        <p class="text-sm"><strong>พื้นที่:</strong> ${item.locations.join(', ')}</p>
-                        <p class="text-sm"><strong>รายละเอียด:</strong> ${item.area} ไร่, ${item.age} ปี, ${item.size} นิ้ว</p>
-                        <p class="text-sm"><strong>ราคา:</strong> ${parseFloat(item.price).toLocaleString()} บาท/ไร่</p>
-                        ${fileInfoHtml}
-                        <div class="mt-2 pt-2 border-t">
-                            <h5 class="text-sm font-semibold">คู่ค้าแนะนำ:</h5>
+                    <div class="p-4 rounded-lg bg-white shadow-md border">
+                        <div class="flex justify-between items-start">
+                             <p class="font-bold text-lg text-gray-800">${item.name}</p>
+                             <span class="text-xs font-semibold px-2 py-1 rounded-full ${item.role === 'buyer' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}">${item.role}</span>
+                        </div>
+                        <div class="mt-3 space-y-2 text-sm text-gray-700">
+                           <p><strong><i class="fas fa-phone w-4"></i> ติดต่อ:</strong> ${item.phone} / ${item.lineId || 'N/A'}</p>
+                           <p><strong><i class="fas fa-map-marker-alt w-4"></i> พื้นที่:</strong> ${item.locations.join(', ')}</p>
+                           <p><strong><i class="fas fa-th-list w-4"></i> รายละเอียด:</strong> ${item.area} ไร่, ${item.age} ปี, ${item.size} นิ้ว</p>
+                           <p><strong><i class="fas fa-dollar-sign w-4"></i> ราคา:</strong> ${parseFloat(item.price).toLocaleString()} บาท/ไร่</p>
+                           ${fileInfoHtml}
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <h5 class="text-sm font-semibold text-gray-600">คู่ค้าที่ระบบแนะนำ:</h5>
                             ${matchesHtml}
                         </div>
                     </div>`;
             };
 
             allSubmissions.forEach(item => {
-                if (item.role === 'buyer') {
-                    buyerList.innerHTML += renderCard(item);
-                } else {
-                    sellerList.innerHTML += renderCard(item);
-                }
+                if (item.role === 'buyer') buyerList.innerHTML += renderCard(item);
+                else sellerList.innerHTML += renderCard(item);
             });
 
-            if(buyerList.innerHTML === '') buyerList.innerHTML = '<p class="text-center text-gray-500">ยังไม่มีข้อมูลผู้รับซื้อ</p>';
-            if(sellerList.innerHTML === '') sellerList.innerHTML = '<p class="text-center text-gray-500">ยังไม่มีข้อมูลผู้ขาย/นายหน้า</p>';
+            if(buyerList.innerHTML === '') buyerList.innerHTML = '<p class="text-center text-gray-500 p-4">ยังไม่มีข้อมูลผู้รับซื้อ</p>';
+            if(sellerList.innerHTML === '') sellerList.innerHTML = '<p class="text-center text-gray-500 p-4">ยังไม่มีข้อมูลผู้ขาย/นายหน้า</p>';
         }
 
         function setupLocationInput() { const locInput = document.getElementById('location-input'); if (!locInput) return; locInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); const val = locInput.value.trim(); if (val && !locations.includes(val)) { locations.push(val); locInput.value = ''; } renderLocationTags(); }}); }
@@ -368,3 +449,5 @@
     </script>
 </body>
 </html>
+
+
