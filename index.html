@@ -59,7 +59,7 @@
             margin-bottom: 0.5rem;
             display: block;
         }
-        .form-input {
+        .form-input, .form-textarea {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid #d1d5db;
@@ -67,7 +67,10 @@
             transition: all 0.2s ease-in-out;
             background-color: #f9fafb;
         }
-        .form-input:focus {
+        .form-textarea {
+            min-height: 120px;
+        }
+        .form-input:focus, .form-textarea:focus {
             outline: none;
             border-color: #10b981;
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
@@ -104,6 +107,15 @@
         }
         .btn-secondary:hover {
             background-color: #f9fafb;
+        }
+        .btn-ai {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            font-size: 0.875rem;
+        }
+        .btn-ai:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         /* Role Cards */
         .role-card {
@@ -149,6 +161,17 @@
             margin-top: 0.75rem;
             font-size: 0.875rem;
             color: #4b5563;
+        }
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.6); display: flex;
+            justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background-color: white; padding: 2.5rem; border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 600px; width: 90%;
         }
 
     </style>
@@ -218,18 +241,101 @@
                 </div>
             </div>
         </div>
+        
+        <!-- AI Modal -->
+        <div id="ai-modal" class="modal-overlay hidden">
+            <div id="ai-modal-content" class="modal-content"></div>
+        </div>
     </div>
 
     <script>
+        // --- State Management ---
         let allSubmissions = [];
         let locations = [];
 
+        // --- DOM Elements ---
         const sections = {
             'role-section': document.getElementById('role-section'),
             'form-section': document.getElementById('form-section'),
             'matching-section': document.getElementById('matching-section')
         };
+        const aiModal = document.getElementById('ai-modal');
         
+        // --- Gemini API ---
+        async function callGemini(prompt) {
+            const apiKey = ""; // API key is handled by the execution environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API call failed with status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    return candidate.content.parts[0].text;
+                } else {
+                    throw new Error("Invalid response structure from API.");
+                }
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                return "ขออภัย, เกิดข้อผิดพลาดในการเรียกใช้ AI";
+            }
+        }
+
+        async function generateAdCopy(button) {
+            const form = document.querySelector('#form-section form');
+            const area = form.querySelector('#area').value;
+            const age = form.querySelector('#age').value;
+            const size = form.querySelector('#size').value;
+            const price = form.querySelector('#price').value;
+
+            if (!area || !age || !size || !price || locations.length === 0) {
+                alert("กรุณากรอกข้อมูลสวนยาง (พื้นที่, อายุ, ขนาด, ราคา, และจังหวัด) ให้ครบถ้วนก่อนใช้ AI ช่วยเขียนครับ");
+                return;
+            }
+
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังสร้าง...';
+
+            const prompt = `คุณคือเอเจนท์ขายอสังหาริมทรัพย์มืออาชีพ โปรดเขียนคำโฆษณาสำหรับประกาศขายสวนยางพาราให้น่าสนใจและดึงดูดใจผู้ซื้อ โดยใช้ข้อมูลต่อไปนี้:\n- สถานที่: ${locations.join(', ')}\n- ขนาด: ${area} ไร่\n- อายุต้นยาง: ${age} ปี\n- ขนาดลำต้น: ${size} นิ้ว\n- ราคาเสนอขาย: ${price} บาทต่อไร่\n\nเขียนในลักษณะที่เป็นกันเองแต่ยังคงความเป็นมืออาชีพ และจบด้วยการเชิญชวนให้ติดต่อสอบถาม`;
+
+            const generatedText = await callGemini(prompt);
+            form.querySelector('#description').value = generatedText;
+
+            button.disabled = false;
+            button.innerHTML = '✨ ช่วยเขียนคำโฆษณา';
+        }
+
+        async function generateIntroMessage(button, buyerIndex, sellerIndex) {
+            const buyer = allSubmissions[buyerIndex];
+            const seller = allSubmissions[sellerIndex];
+
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            const prompt = `คุณคือนายหน้ามืออาชีพสำหรับซื้อขายสวนยางพารา โปรดร่างข้อความที่เป็นกลางและสุภาพเพื่อแนะนำผู้ซื้อและผู้ขายให้รู้จักกัน และเปิดการเจรจาเบื้องต้น โดยใช้ข้อมูลของผู้ซื้อและผู้ขายต่อไปนี้:\n\n**ข้อมูลฝั่งผู้ซื้อ:**\n- ชื่อ: ${buyer.name}\n- ต้องการซื้อในพื้นที่: ${buyer.locations.join(', ')}\n- จำนวนที่ต้องการ: ${buyer.area} ไร่\n- อายุยางที่สนใจ: ${buyer.age} ปี\n\n**ข้อมูลฝั่งผู้ขาย:**\n- ชื่อ: ${seller.name}\n- สวนยางตั้งอยู่ที่: ${seller.locations.join(', ')}\n- จำนวนที่มี: ${seller.area} ไร่\n- อายุยาง: ${seller.age} ปี\n\nโปรดจบข้อความด้วยการแนะนำให้ทั้งสองฝ่ายติดต่อกันโดยตรงเพื่อพูดคุยรายละเอียดเพิ่มเติมผ่านเบอร์โทรศัพท์หรือ Line ที่ได้ให้ไว้`;
+
+            const generatedText = await callGemini(prompt);
+            showAiModal('ร่างข้อความแนะนำ', generatedText);
+
+            button.disabled = false;
+            button.innerHTML = '✨ ร่างข้อความแนะนำ';
+        }
+
+
+        // --- UI & Page Management ---
         function showSection(sectionId) {
             Object.values(sections).forEach(s => s.classList.add('hidden'));
             if (sections[sectionId]) sections[sectionId].classList.remove('hidden');
@@ -264,9 +370,14 @@
             else title = 'ลงทะเบียนนายหน้า (ตัวแทนเจ้าของ)';
             titleEl.innerText = title;
 
-            let fileUploadHtml = '';
+            let extraFields = '';
             if (role === 'seller' || role === 'broker') {
-                fileUploadHtml = `
+                extraFields = `
+                    <div>
+                        <label class="form-label" for="description">รายละเอียดเพิ่มเติมเกี่ยวกับสวนยาง</label>
+                        <textarea id="description" class="form-textarea" placeholder="เช่น สวนสวย ติดถนนใหญ่ น้ำยางดี..."></textarea>
+                        <button type="button" class="btn btn-ai w-full mt-2" onclick="generateAdCopy(this)">✨ ช่วยเขียนคำโฆษณา</button>
+                    </div>
                     <div>
                         <label class="form-label">แนบรูปภาพ/วีดีโอ (3-5 ไฟล์)</label>
                         <div class="file-input-wrapper">
@@ -302,7 +413,7 @@
                      <label class="form-label">${priceLabel}</label>
                      <input type="number" id="price" class="form-input" required>
                 </div>
-                ${fileUploadHtml}
+                ${extraFields}
                 <div>
                      <label class="form-label">ID Line (ถ้ามี)</label>
                      <input type="text" id="lineId" class="form-input">
@@ -336,7 +447,10 @@
                 for(let i = 0; i < fileInput.files.length; i++) fileNames.push(fileInput.files[i].name);
             }
 
+            const descriptionEl = form.querySelector('#description');
+            
             const submission = {
+                id: allSubmissions.length,
                 role: document.getElementById('form-role-hidden').value,
                 name: form.querySelector('#name').value,
                 phone: form.querySelector('#phone').value,
@@ -346,6 +460,7 @@
                 size: form.querySelector('#size').value,
                 price: form.querySelector('#price').value,
                 lineId: form.querySelector('#lineId').value,
+                description: descriptionEl ? descriptionEl.value : '',
                 files: fileNames,
             };
             
@@ -375,7 +490,7 @@
         function findPotentialMatches(currentItem, allItems) {
             const matches = [];
             const targetRoles = currentItem.role === 'buyer' ? ['seller', 'broker'] : ['buyer'];
-            const potentialPartners = allItems.filter(item => targetRoles.includes(item.role));
+            const potentialPartners = allItems.filter(item => targetRoles.includes(item.role) && item.id !== currentItem.id);
 
             potentialPartners.forEach(partner => {
                 const locationMatch = currentItem.locations.some(loc => partner.locations.includes(loc));
@@ -395,21 +510,34 @@
             buyerList.innerHTML = '';
             sellerList.innerHTML = '';
 
-            const renderCard = (item) => {
+            const renderCard = (item, itemIndex) => {
                 const matches = findPotentialMatches(item, allSubmissions);
                 let matchesHtml = '<p class="text-xs text-gray-500 italic mt-2">ไม่มีคู่ค้าที่แนะนำ</p>';
                 if (matches.length > 0) {
-                    matchesHtml = matches.map(match => `
-                        <div class="text-xs p-2 bg-white rounded-md mt-2 flex items-center gap-2">
-                           <i class="fas fa-check-circle text-green-500"></i>
-                           <span>${match.name} (${match.area} ไร่, ${match.age} ปี)</span>
+                    matchesHtml = matches.map(match => {
+                        const sellerIndex = allSubmissions.findIndex(s => s.id === match.id);
+                        const buyerIndexForMatch = item.role === 'buyer' ? itemIndex : sellerIndex;
+                        const sellerIndexForMatch = item.role === 'buyer' ? sellerIndex : itemIndex;
+
+                        return `
+                        <div class="text-xs p-2 bg-white rounded-md mt-2 flex items-center justify-between gap-2">
+                           <div class="flex items-center gap-2">
+                                <i class="fas fa-check-circle text-green-500"></i>
+                                <span>${match.name} (${match.area} ไร่, ${match.age} ปี)</span>
+                           </div>
+                           <button class="btn btn-ai p-1 h-6 text-xs" onclick="generateIntroMessage(this, ${buyerIndexForMatch}, ${sellerIndexForMatch})">✨</button>
                         </div>
-                    `).join('');
+                    `}).join('');
                 }
 
                 let fileInfoHtml = '';
                 if ((item.role === 'seller' || item.role === 'broker') && item.files && item.files.length > 0) {
                     fileInfoHtml = `<div class="text-sm text-gray-600 mt-2 flex items-center gap-2"><i class="fas fa-paperclip"></i><span>${item.files.length} ไฟล์แนบ</span></div>`;
+                }
+                
+                let descriptionHtml = '';
+                if(item.description){
+                    descriptionHtml = `<div class="mt-2 pt-2 border-t border-gray-200"><p class="text-xs italic text-gray-600">"${item.description}"</p></div>`;
                 }
 
                 return `
@@ -424,6 +552,7 @@
                            <p><strong><i class="fas fa-th-list w-4"></i> รายละเอียด:</strong> ${item.area} ไร่, ${item.age} ปี, ${item.size} นิ้ว</p>
                            <p><strong><i class="fas fa-dollar-sign w-4"></i> ราคา:</strong> ${parseFloat(item.price).toLocaleString()} บาท/ไร่</p>
                            ${fileInfoHtml}
+                           ${descriptionHtml}
                         </div>
                         <div class="mt-4 pt-4 border-t border-gray-200">
                             <h5 class="text-sm font-semibold text-gray-600">คู่ค้าที่ระบบแนะนำ:</h5>
@@ -432,18 +561,31 @@
                     </div>`;
             };
 
-            allSubmissions.forEach(item => {
-                if (item.role === 'buyer') buyerList.innerHTML += renderCard(item);
-                else sellerList.innerHTML += renderCard(item);
+            allSubmissions.forEach((item, index) => {
+                if (item.role === 'buyer') buyerList.innerHTML += renderCard(item, index);
+                else sellerList.innerHTML += renderCard(item, index);
             });
 
             if(buyerList.innerHTML === '') buyerList.innerHTML = '<p class="text-center text-gray-500 p-4">ยังไม่มีข้อมูลผู้รับซื้อ</p>';
             if(sellerList.innerHTML === '') sellerList.innerHTML = '<p class="text-center text-gray-500 p-4">ยังไม่มีข้อมูลผู้ขาย/นายหน้า</p>';
         }
 
+        // --- Utility Functions ---
         function setupLocationInput() { const locInput = document.getElementById('location-input'); if (!locInput) return; locInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); const val = locInput.value.trim(); if (val && !locations.includes(val)) { locations.push(val); locInput.value = ''; } renderLocationTags(); }}); }
         function renderLocationTags() { const container = document.getElementById('location-tags'); if(!container) return; container.innerHTML = locations.map((loc, i) => `<div class="tag"><span>${loc}</span><span class="tag-close" onclick="removeLocation(${i})">&times;</span></div>`).join(''); }
         function removeLocation(index) { locations.splice(index, 1); renderLocationTags(); }
+        function showAiModal(title, content) {
+            const modalContent = document.getElementById('ai-modal-content');
+            modalContent.innerHTML = `
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">${title}</h3>
+                <textarea class="form-textarea w-full h-48" readonly>${content}</textarea>
+                <button class="btn btn-secondary mt-6 w-full" onclick="closeAiModal()">ปิด</button>
+            `;
+            aiModal.classList.remove('hidden');
+        }
+        function closeAiModal() {
+            aiModal.classList.add('hidden');
+        }
 
         document.addEventListener('DOMContentLoaded', () => { showSection('role-section'); });
     </script>
