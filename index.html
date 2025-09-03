@@ -23,7 +23,7 @@
             content: '';
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('http://googleusercontent.com/file_content/9');
+            background-image: url('https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/rubber-tree-plantation.jpg');
             background-size: cover; background-position: center;
             filter: blur(5px); z-index: -1; opacity: 0.8;
         }
@@ -56,12 +56,11 @@
             cursor: pointer; transition: all 0.3s ease;
             width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
         }
-        .btn-primary { background-color: #22c5e; color: white; }
+        .btn-primary { background-color: #22c55e; color: white; }
         .btn-primary:hover { background-color: #16a34a; }
         .btn-secondary { background-color: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
         .btn-secondary:hover { background-color: #e5e7eb; }
         .hidden { display: none; }
-        /* Tag system for multiple locations */
         .tag-container { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 8px; margin-top: 0.5rem; min-height: 46px; }
         .tag { background-color: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; display: flex; align-items: center; font-size: 0.875rem; }
         .tag-close { margin-left: 0.5rem; cursor: pointer; font-weight: bold; }
@@ -79,7 +78,6 @@
 
     <div id="app-container" class="container mx-auto p-4 max-w-5xl">
         
-        <!-- Role Selection -->
         <div id="role-section" class="form-card text-center">
             <h1 class="form-title">ระบบซื้อ-ขาย ไม้ยางพารา (ทั่วประเทศ)</h1>
             <p class="text-gray-600 mb-8">ประมวลผลด้วยระบบ AI<br>เพื่อค้นหาคู่ค้าที่เหมาะกับผู้ใช้งานมากที่สุด</p>
@@ -107,7 +105,6 @@
             </div>
         </div>
 
-        <!-- Data Entry Form -->
         <div id="form-section" class="hidden">
              <form class="form-card" onsubmit="handleFormSubmit(event)">
                 <input type="hidden" id="form-role-hidden">
@@ -126,7 +123,6 @@
             </form>
         </div>
 
-        <!-- Matching System -->
         <div id="matching-section" class="hidden form-card">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="form-title mb-0">ระบบจับคู่ข้อมูล</h2>
@@ -143,28 +139,24 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
-        // --- In-memory database (clears on refresh) ---
         let allSubmissions = [];
         let locations = [];
 
-        // --- DOM Elements ---
         const sections = {
             'role-section': document.getElementById('role-section'),
             'form-section': document.getElementById('form-section'),
             'matching-section': document.getElementById('matching-section')
         };
         
-        // --- SECTION & PAGE MANAGEMENT ---
         function showSection(sectionId) {
             Object.values(sections).forEach(s => s.classList.add('hidden'));
             if (sections[sectionId]) {
                 sections[sectionId].classList.remove('hidden');
             }
-             window.scrollTo(0,0);
+            window.scrollTo(0,0);
         }
         
         function showForm(role) {
@@ -174,22 +166,20 @@
 
         function promptForAdminPassword() {
             const password = prompt("กรุณาใส่รหัสผ่านสำหรับผู้ดูแล:", "");
-            // Note: This is a simple, insecure password for demonstration.
-            // For a real application, a proper authentication system should be used.
             if (password === "admin1234") {
                 showMatchingSystem();
-            } else if (password !== null) { // User entered something but it was wrong
+            } else if (password !== null) {
                 alert("รหัสผ่านไม่ถูกต้อง");
             }
-            // If password is null, user clicked "Cancel", so do nothing.
         }
         
-        function showMatchingSystem() {
+        async function showMatchingSystem() {
+            // In a real app with a backend, you'd fetch data here.
+            // For now, we just use the data submitted in the current session.
             renderMatchingLists();
             showSection('matching-section');
         }
 
-        // --- FORM & SUBMISSION ---
         function renderForm(role) {
             document.getElementById('form-role-hidden').value = role;
             const titleEl = document.getElementById('form-section-title');
@@ -240,7 +230,7 @@
                      <input type="text" id="lineId" class="form-input">
                 </div>
             `;
-            locations = []; // Reset locations for new form
+            locations = [];
             renderLocationTags();
             setupLocationInput();
         }
@@ -272,23 +262,18 @@
                 lineId: form.querySelector('#lineId').value,
                 files: fileNames,
             };
+            
+            const WEB_APP_URL =https://script.google.com/macros/s/AKfycbxjpLdRooeozbThqIp4wAsEPpMI39u06gI3a49PEbe4LWkGatz_7Mfk4Hkqb3BNYDB1/exec
 
-            // !!! --- ส่วนสำคัญที่ต้องแก้ไข --- !!!
-            // ในขั้นตอนสุดท้ายของการตั้งค่า ให้นำ URL ของเว็บแอปที่คุณคัดลอกไว้จาก Google Apps Script
-            // มาวางแทนที่ข้อความ 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE' ข้างล่างนี้
-            const WEB_APP_URL = https://script.google.com/macros/s/AKfycbxjpLdRooeozbThqIp4wAsEPpMI39u06gI3a49PEbe4LWkGatz_7Mfk4Hkqb3BNYDB1/exec
             try {
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Important for simple Google Scripts
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json', },
                     body: JSON.stringify(submission)
                 });
                 
-                // Since it's no-cors, we can't read the response, but we assume it's successful
-                allSubmissions.push(submission); // Keep it in local memory for the matching system to work instantly
+                allSubmissions.push(submission);
                 alert('กรอกข้อมูลเสร็จสิ้น ขอบคุณครับ/ค่ะ');
                 form.reset();
                 locations = [];
@@ -304,24 +289,18 @@
             }
         }
         
-        // --- MATCHING SYSTEM ---
         function findPotentialMatches(currentItem, allItems) {
             const matches = [];
             const targetRoles = currentItem.role === 'buyer' ? ['seller', 'broker'] : ['buyer'];
-
             const potentialPartners = allItems.filter(item => targetRoles.includes(item.role));
 
             potentialPartners.forEach(partner => {
-                // Matching Criteria
                 const locationMatch = currentItem.locations.some(loc => partner.locations.includes(loc));
-                const ageMatch = Math.abs(parseInt(currentItem.age) - parseInt(partner.age)) <= 5; // Within 5 years
-                
+                const ageMatch = Math.abs(parseInt(currentItem.age) - parseInt(partner.age)) <= 5;
                 let areaMatch = false;
                 if (currentItem.role === 'buyer') {
-                    // Buyer wants X rai, Seller has Y rai. Match if Y >= X.
                     areaMatch = parseFloat(partner.area) >= parseFloat(currentItem.area);
-                } else { // currentItem is seller/broker
-                    // Seller has Y rai, Buyer wants X rai. Match if X <= Y.
+                } else {
                     areaMatch = parseFloat(partner.area) <= parseFloat(currentItem.area);
                 }
 
@@ -335,7 +314,6 @@
         function renderMatchingLists() {
             const buyerList = document.getElementById('buyer-list');
             const sellerList = document.getElementById('seller-list');
-
             buyerList.innerHTML = '';
             sellerList.innerHTML = '';
 
@@ -382,16 +360,11 @@
             if(sellerList.innerHTML === '') sellerList.innerHTML = '<p class="text-center text-gray-500">ยังไม่มีข้อมูลผู้ขาย/นายหน้า</p>';
         }
 
-        // --- UTILITY FUNCTIONS ---
         function setupLocationInput() { const locInput = document.getElementById('location-input'); if (!locInput) return; locInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); const val = locInput.value.trim(); if (val && !locations.includes(val)) { locations.push(val); locInput.value = ''; } renderLocationTags(); }}); }
         function renderLocationTags() { const container = document.getElementById('location-tags'); if(!container) return; container.innerHTML = locations.map((loc, i) => `<div class="tag"><span>${loc}</span><span class="tag-close" onclick="removeLocation(${i})">&times;</span></div>`).join(''); }
         function removeLocation(index) { locations.splice(index, 1); renderLocationTags(); }
 
-        // --- Initial Load ---
         document.addEventListener('DOMContentLoaded', () => { showSection('role-section'); });
     </script>
 </body>
 </html>
-
-
-
